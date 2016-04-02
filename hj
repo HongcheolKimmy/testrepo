@@ -1,0 +1,170 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 01 16:36:36 2016
+
+@author: hkim581
+"""
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+sys.getdefaultencoding()
+
+import numpy as np
+from pandas import *
+
+import pandas as pd
+import os
+import csv
+import time 
+pd.set_option('display.expand_frame_repr', False)
+
+
+import xlwt
+from xlwt.Workbook import *
+from pandas import ExcelWriter
+import xlsxwriter
+
+
+#os.chdir('C:\Users\hkim581\AppData\Local\Bloomberg\data')
+userpath = os.getcwd()
+username = userpath.split("\\")[2]
+folderpath = 'C:\\Users\\'+username+'\\AppData\\Local\\Bloomberg\\data\\'
+#date = time.strftime('%Y%m%d',time.gmtime(os.path.getmtime(filepath)))
+
+original_file = "1111.txt"   # will be changed with date above
+filepath = folderpath + original_file
+
+
+
+#original = pd.DataFrame()
+#data = pd.DataFrame()
+
+#original = pd.read_csv(filepath)
+df = pd.read_csv(filepath)
+
+
+df.head()
+"""
+a=df[[6]]
+pd.Series(a.values.tolist()[0]).str[0]
+pd.Series(df[[6]].values.tolist()).str[0]
+"""
+
+
+
+
+
+a=pd.Series(df[[6]]
+
+#decode = pd.DataFrame()
+
+for i in range(len(df)):
+    decode_line = pd.DataFrame([pd.Series(df[[6]].values.tolist()[i]).str[0][0:1]])
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][1:3],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][3:4],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][4:5],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][5:6],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][6:7],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][7:9],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][9:11],
+                           #pd.Series(df[[6]].values.tolist()[i]).str[0][11:]])
+    decode=decode.append(decode_line.T, ignore_index=True)
+
+
+print decode.head()
+
+"""
+evdf = df_null
+# print(evdf.to_string(formatters={'name':'{{:<{}s}}'.format(evdf['name'].str.len().max()).format}, index=False))
+
+time.sleep(2)
+
+# CACT : Read xls file with CSV
+ini = automod.autotool()
+ca_file = ini.CACT()
+
+#time.sleep(15)
+cadf = pd.read_csv(filepath+ca_file)
+#cadf = pd.read_csv(filepath+'cadl216.xls')
+cadf = cadf[1:]
+
+# CACT : Clean and Rearrange data 
+df_null = pd.DataFrame(columns =['type','ticker','date','name'])
+for i in range(len(cadf)):
+    df_line= pd.DataFrame([str(cadf.values.tolist()[i]).split('\\t')[0][2:],
+                           str(cadf.values.tolist()[i]).split('\\t')[1][:6],
+                           str(cadf.values.tolist()[i]).split('\\t')[3],
+                           str(cadf.values.tolist()[i]).split('\\t')[5][6:]],
+                           index=['type','ticker','date','name'])
+    df_null=df_null.append(df_line.T, ignore_index=True)
+
+cadf = df_null
+#print(cadf.to_string(formatters={'name':'{{:<{}s}}'.format(cadf['name'].str.len().max()).format, 'type':'{{:<{}s}}'.format(cadf['type'].str.len().max()).format}, index=False))
+
+#Sorting only for the Corporating Meeting action type
+cadf = cadf.ix[cadf['type'] == 'Corporate Meeting']
+
+# take only ticker and date columns and compress them together
+evdf = evdf.ix[:,['ticker','date']]
+cadf = cadf.ix[:,['ticker','date']]
+evdf['compressed']=evdf.apply(lambda x:'%s%s' % (x['ticker'],x['date']),axis=1)
+cadf['compressed']=cadf.apply(lambda x:'%s%s' % (x['ticker'],x['date']),axis=1)
+
+
+#check 1: check duplicated data in EVTS and CACT
+if len(evdf.ix[evdf['compressed'].duplicated()]) > 0 :
+    evdf_dupli = evdf[evdf['ticker'] == evdf.ix[evdf['compressed'].duplicated()].values.tolist()[0][0]].ix[:,['ticker','date']]
+else :
+    evdf_dupli = None
+
+if len(cadf.ix[cadf['compressed'].duplicated()]) > 0 :
+    cadf_dupli = cadf[cadf['ticker'] == cadf.ix[cadf['compressed'].duplicated()].values.tolist()[0][0]].ix[:,['ticker','date']]
+else :
+    cadf_dupli = None
+
+
+#check 2: check missing data in EVTS
+cadf['Success'] = cadf['compressed'].isin(evdf['compressed']).astype(int)
+evdf_miss = cadf.ix[cadf['Success']==0]
+if len(evdf_miss) > 0 :
+    evdf_miss = evdf_miss.ix[:,['ticker','date']]
+else :
+    evdf_miss = None    
+
+print "\n""'EVTS_duplicated data'"
+print evdf_dupli,"\n""\n"
+print "CACT_duplicated data "
+print cadf_dupli,"\n""\n"
+print "EVTS_missing data "
+print evdf_miss
+
+
+for i in range(len(evdf_miss)):
+    ticker = evdf_miss.values.tolist()[i][0]
+    date =   evdf_miss.values.tolist()[i][1]
+    year = date[2:4]
+    month = date[5:7]
+    day = date[8:10]
+    ini.EVTS_insert(ticker,day,month,year)
+
+"""
+
+
+"""
+writer = pd.ExcelWriter('final1.xlsx')
+
+#wb = Workbook()
+#ws1 = wb.add_sheet('original')
+#ws2 = wb.add_sheet('result')
+#original.to_excel(writer,'original')
+data.to_excel(writer,'result')
+writer.save()
+"""
+
+
+
+
+
+
+
+
